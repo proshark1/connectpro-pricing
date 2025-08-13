@@ -9,17 +9,17 @@
 <body class="bg-slate-50 font-sans">
     <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
         <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Choose Your Plan</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Find the perfect plan</h1>
             <p class="text-slate-600 text-lg max-w-3xl mx-auto">
-                Powerful AI-driven lead generation tools built for growth.
+                Unlock the full power of lead generation with a plan that fits your needs.
             </p>
         </div>
 
         <!-- Email Collection Modal -->
         <div id="emailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="closeEmailModal()">
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8" onclick="event.stopPropagation()">
-                <h2 class="text-2xl font-bold mb-2">Complete Your Purchase</h2>
-                <p class="text-slate-600 mb-6">Enter your email to proceed to our secure checkout.</p>
+                <h2 class="text-2xl font-bold mb-2">Create Your Account</h2>
+                <p class="text-slate-600 mb-6">Enter your email to get started. You'll create your password after payment.</p>
                 <div class="space-y-4">
                     <div>
                         <label for="userEmail" class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
@@ -29,12 +29,12 @@
                         <input type="checkbox" id="addWhiteGlove" class="h-5 w-5 text-purple-600 rounded focus:ring-purple-500">
                         <div>
                             <label for="addWhiteGlove" class="text-sm font-semibold text-purple-900">Add White Glove Support</label>
-                            <p class="text-xs text-purple-700">Premium monthly support with dedicated account management (+$300/month)</p>
+                            <p class="text-xs text-purple-700">Monthly premium support with dedicated account management (+$300/month)</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-4">
                         <button onclick="closeEmailModal()" class="w-full px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100 font-semibold">Cancel</button>
-                        <button id="checkoutBtn" onclick="proceedToCheckout()" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Continue to Checkout</button>
+                        <button id="checkoutBtn" onclick="proceedToCheckout()" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Continue to Payment</button>
                     </div>
                 </div>
             </div>
@@ -43,12 +43,12 @@
         <!-- Business Plans Section -->
         <div class="mb-16">
             <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Business Plans</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto" id="businessPlansContainer"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="businessPlansContainer"></div>
         </div>
         
         <!-- Agency Plans Section -->
         <div class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Agency Plans</h2>
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Agency & White-Label Plans</h2>
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="agencyPlansContainer"></div>
         </div>
 
@@ -57,65 +57,80 @@
     <script>
         let selectedPlan = null;
 
+        // ALL 3 BUSINESS PLANS FROM YOUR DATABASE
         const businessPlans = [
             {
-                id: "prod_ShNOfgzYJaifF6",
-                name: "Outbound Agent Basic Plan", 
+                id: "prod_ShNoSTxMvFDNTm",
+                name: "Outbound Agent Free Plan",
+                price: 0,
+                priceId: "price_1Rlz2z4Jprwov3MpNZRib5wO",
+                features: [
+                    "Basic lead discovery",
+                    "Limited outreach",
+                    "Community support",
+                    "Standard features"
+                ],
+                featured: false
+            },
+            {
+                id: "prod_ShNOfgzYJaifF6", 
+                name: "Outbound Agent Basic Plan",
                 price: 297,
                 priceId: "price_1Rlydn4Jprwov3MpY3xWL8ki",
                 features: [
                     "AI-powered lead discovery",
-                    "Basic outbound campaigns",
-                    "Email integration", 
-                    "Standard support",
-                    "Up to 500 leads per month"
+                    "Advanced outbound campaigns", 
+                    "Email & SMS integration",
+                    "Priority support",
+                    "Team collaboration"
                 ],
                 featured: false
             },
             {
                 id: "prod_ShNPNod6PyQ05E",
-                name: "Outbound Agent Pro Plan",
+                name: "Outbound Agent Pro Plan", 
                 price: 597,
-                priceId: "price_1RlyeJ4Jprwov3Mpd17ETeVT", 
+                priceId: "price_1RlyeJ4Jprwov3Mpd17ETeVT",
                 features: [
-                    "Advanced AI lead discovery",
-                    "Multi-channel outbound campaigns",
-                    "CRM integrations",
-                    "Priority support", 
-                    "Unlimited leads",
-                    "Team collaboration tools"
+                    "Everything in Basic",
+                    "Unlimited campaigns",
+                    "Advanced AI matching",
+                    "CRM integrations", 
+                    "White-label options",
+                    "Dedicated success manager"
                 ],
                 featured: true,
                 badge: "Most Popular"
             }
         ];
         
+        // BOTH AGENCY PLANS
         const agencyPlans = [
             {
                 id: "prod_SgfGA2TVR9McAE",
                 name: "Agency Starter",
                 price: 297,
-                priceId: "price_1RlHvb4Jprwov3MpAerSeDBc",
+                priceId: "price_1RlHvb4Jprwov3MpAerSeDBc", 
                 features: [
-                    "Manage up to 10 clients",
-                    "White-label dashboards", 
-                    "Client reporting",
-                    "Agency branding",
-                    "Standard support"
+                    "Up to 10 client accounts",
+                    "White-label dashboards",
+                    "Client reporting tools",
+                    "Revenue sharing model",
+                    "Agency support"
                 ],
                 featured: false
             },
             {
-                id: "prod_SgfGQEtOQRvDr4", 
-                name: "Agency Pro",
+                id: "prod_SgfGQEtOQRvDr4",
+                name: "Agency Pro", 
                 price: 497,
                 priceId: "price_1RlHwF4Jprwov3MpL4Xqu8Jt",
                 features: [
-                    "Unlimited clients",
+                    "Unlimited client accounts",
                     "Full white-labeling",
-                    "Custom domain support",
-                    "Advanced client billing",
-                    "Dedicated agency support"
+                    "Custom domain support", 
+                    "Advanced billing tools",
+                    "Dedicated agency manager"
                 ],
                 featured: true,
                 badge: "Full Power"
@@ -141,18 +156,20 @@
                 `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">${plan.badge}</div>` : '';
             
             return `
-                <div class="flex flex-col ${plan.featured ? 'bg-white border-2 border-blue-600' : 'bg-white border border-slate-200'} rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative p-8">
+                <div class="flex flex-col ${plan.featured ? 'bg-white border-2 border-purple-500 ring-4 ring-purple-100' : 'bg-white border border-slate-200'} rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 relative p-6">
                     ${badgeHtml}
                     <div class="text-center mb-6">
                         <h3 class="text-2xl font-bold text-slate-900 mb-2">${plan.name}</h3>
-                        <div class="text-5xl font-extrabold text-slate-900 mb-1">$${plan.price}</div>
-                        <p class="text-slate-500">per month</p>
+                        <div class="text-4xl font-bold text-slate-900 mb-1">
+                            ${plan.price === 0 ? 'Free' : `$${plan.price}`}
+                            ${plan.price > 0 ? '<span class="text-lg font-normal text-slate-600">/month</span>' : ''}
+                        </div>
                     </div>
-                    <ul class="space-y-4 mb-8 flex-grow">
+                    <ul class="space-y-3 mb-8 flex-grow">
                         ${featuresHtml}
                     </ul>
-                    <button onclick="selectPlan('${plan.id}', '${plan.priceId}')" class="w-full py-3 px-4 ${plan.featured ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-800 hover:bg-slate-900 text-white'} rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg">
-                        Get Started
+                    <button onclick="selectPlan('${plan.id}', '${plan.priceId}')" class="w-full py-3 px-4 ${plan.featured ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} rounded-lg font-medium transition-colors">
+                        Get ${plan.name}
                     </button>
                 </div>
             `;
@@ -181,7 +198,6 @@
             checkoutBtn.innerHTML = 'Processing...';
 
             try {
-                // IMPORTANT: This URL points to your live base44 function
                 const response = await fetch('https://base44.app/api/apps/68729a31b99f8564e3a3467c/functions/createCheckoutSession', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -200,7 +216,6 @@
 
                 const { url } = await response.json();
                 if (url) {
-                    // This command tells the parent Duda page to navigate
                     window.top.location.href = url;
                 } else {
                     throw new Error('Checkout URL not received.');
@@ -208,11 +223,10 @@
             } catch (error) {
                 alert('Error: ' + error.message);
                 checkoutBtn.disabled = false;
-                checkoutBtn.innerHTML = 'Continue to Checkout';
+                checkoutBtn.innerHTML = 'Continue to Payment';
             }
         }
 
-        // Load plans when page loads
         document.addEventListener('DOMContentLoaded', displayPlans);
     </script>
 </body>
