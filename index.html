@@ -55,13 +55,13 @@
                 <p class="col-span-full text-center text-slate-600">Loading plans...</p>
             </div>
         </div>
-
     </main>
 
     <script>
         let selectedPlan = null;
+        const CHECKOUT_FUNCTION_URL = "https://app.connectpro.ai/api/functions/createCheckoutSession";
+        const PLANS_FUNCTION_URL = "https://app.connectpro.ai/api/functions/getPublicPlans";
 
-        // This function dynamically builds a plan card from data
         function createPlanCard(plan) {
             const featuresHtml = (plan.features || []).map(feature => 
                 `<li class="flex items-start gap-3">
@@ -70,50 +70,50 @@
                 </li>`
             ).join('');
 
-            const badgeHtml = plan.badge_text ? 
-                `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                        ${plan.badge_text}
-                    </span>
-                </div>` : '';
-
-            const priceHtml = plan.custom_price_text ? 
-                `<div class="text-center mb-6">
-                    <div class="text-2xl font-bold text-slate-900">${plan.custom_price_text}</div>
-                </div>` :
-                `<div class="text-center mb-6">
-                    <div class="text-4xl font-bold text-slate-900">$${plan.price}</div>
-                    <div class="text-slate-500">per month</div>
-                </div>`;
+            const badgeHtml = plan.badge_text ? `<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">${plan.badge_text}</div>` : '';
 
             return `
-                <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${plan.featured ? 'border-2 border-blue-500 transform scale-105' : 'border border-slate-200'}">
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col p-8 relative ${plan.featured ? 'border-2 border-purple-500' : ''}">
                     ${badgeHtml}
-                    <div class="p-8">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 text-center">${plan.name}</h3>
-                        ${priceHtml}
-                        <ul class="space-y-4 mb-8">
-                            ${featuresHtml}
-                        </ul>
-                        <button 
-                            onclick="selectPlan('${plan.id}', '${plan.stripe_monthly_price_id}', '${plan.name}')" 
-                            class="w-full py-3 px-4 rounded-lg font-semibold transition-colors duration-200 ${
-                                plan.featured 
-                                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                                    : 'bg-slate-900 text-white hover:bg-slate-800'
-                            }"
-                        >
-                            Get Started
-                        </button>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-bold text-slate-900 text-center mb-2">${plan.name}</h3>
+                        <p class="text-center text-4xl font-extrabold text-slate-900 mb-2">${plan.custom_price_text || '$' + plan.price}</p>
+                        <p class="text-center text-slate-600 mb-8">${plan.custom_price_text ? '' : 'per month'}</p>
+                        <ul class="space-y-4 mb-10">${featuresHtml}</ul>
                     </div>
+                    <button onclick='openEmailModal(${JSON.stringify(plan)})' class="w-full mt-auto px-6 py-3 rounded-lg font-semibold text-lg transition-colors ${plan.featured ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-slate-800 text-white hover:bg-slate-900'}">Get Started</button>
                 </div>
             `;
         }
 
-        function selectPlan(planId, priceId, planName) {
-            selectedPlan = { planId, priceId, planName };
+        async function loadPlans() {
+            try {
+                const response = await fetch(PLANS_FUNCTION_URL, { method: 'POST', headers: {'Content-Type': 'application/json'} });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}. Details: ${errorText}`);
+                }
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'API returned an error');
+                }
+
+                const businessContainer = document.getElementById('businessPlansContainer');
+                const agencyContainer = document.getElementById('agencyPlansContainer');
+
+                businessContainer.innerHTML = data.accountPlans.length ? data.accountPlans.map(createPlanCard).join('') : '<p class="col-span-full text-center text-slate-600">No business plans available right now.</p>';
+                agencyContainer.innerHTML = data.agencyPlans.length ? data.agencyPlans.map(createPlanCard).join('') : '<p class="col-span-full text-center text-slate-600">No agency plans available right now.</p>';
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('businessPlansContainer').innerHTML = `<p class="col-span-full text-center text-red-600 font-semibold">Error: Could not load pricing plans. Please try again later.<br><span class="text-sm text-slate-500 font-normal">Technical details: ${error.message}</span></p>`;
+            }
+        }
+
+        function openEmailModal(plan) {
+            selectedPlan = plan;
             document.getElementById('emailModal').classList.remove('hidden');
-            document.getElementById('userEmail').focus();
         }
 
         function closeEmailModal() {
@@ -124,94 +124,48 @@
         async function proceedToCheckout() {
             const email = document.getElementById('userEmail').value;
             const addWhiteGlove = document.getElementById('addWhiteGlove').checked;
-            
-            if (!email || !selectedPlan) {
-                alert('Please enter your email address');
+
+            if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            if (!selectedPlan) {
+                alert('No plan selected. Please close this and choose a plan.');
                 return;
             }
 
-            document.getElementById('checkoutBtn').innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block"></div>Processing...';
-            document.getElementById('checkoutBtn').disabled = true;
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerHTML = 'Processing...';
 
             try {
-                const response = await fetch('https://app.connectpro.ai/api/functions/createCheckoutSession', {
+                const response = await fetch(CHECKOUT_FUNCTION_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        priceId: selectedPlan.priceId,
-                        planId: selectedPlan.planId,
+                        priceId: selectedPlan.stripe_monthly_price_id,
+                        planId: selectedPlan.id,
                         userEmail: email,
                         add_white_glove_subscription: addWhiteGlove
                     })
                 });
+                
+                if (!response.ok) throw new Error('Failed to create checkout session.');
 
-                const data = await response.json();
-                if (data.url) {
-                    window.location.href = data.url;
+                const session = await response.json();
+                if (session.url) {
+                    window.location.href = session.url;
                 } else {
-                    throw new Error(data.error || 'Failed to create checkout session');
+                    throw new Error(session.error || 'Could not retrieve checkout URL.');
                 }
             } catch (error) {
-                console.error('Checkout error:', error);
-                alert('There was an error processing your request. Please try again.');
-                document.getElementById('checkoutBtn').innerHTML = 'Continue to Checkout';
-                document.getElementById('checkoutBtn').disabled = false;
+                alert(`Error: ${error.message}`);
+                checkoutBtn.disabled = false;
+                checkoutBtn.innerHTML = 'Continue to Checkout';
             }
         }
 
-        // Load plans on page load
-        async function loadPlans() {
-            try {
-                console.log('Loading plans from API...');
-                const response = await fetch('https://app.connectpro.ai/api/functions/getPublicPlans', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                console.log('API response status:', response.status);
-                const data = await response.json();
-                console.log('API response data:', data);
-                
-                if (data.success) {
-                    // Render Business Plans
-                    const businessContainer = document.getElementById('businessPlansContainer');
-                    if (data.accountPlans && data.accountPlans.length > 0) {
-                        businessContainer.innerHTML = data.accountPlans.map(plan => createPlanCard(plan)).join('');
-                    } else {
-                        businessContainer.innerHTML = '<p class="col-span-full text-center text-slate-600">No business plans available at this time.</p>';
-                    }
-                    
-                    // Render Agency Plans
-                    const agencyContainer = document.getElementById('agencyPlansContainer');
-                    if (data.agencyPlans && data.agencyPlans.length > 0) {
-                        agencyContainer.innerHTML = data.agencyPlans.map(plan => createPlanCard(plan)).join('');
-                    } else {
-                        agencyContainer.innerHTML = '<p class="col-span-full text-center text-slate-600">No agency plans available at this time.</p>';
-                    }
-                } else {
-                    throw new Error(data.error || 'Failed to load plans');
-                }
-            } catch (error) {
-                console.error('Error loading plans:', error);
-                
-                // Show error message
-                const errorMsg = '<div class="col-span-full text-center"><p class="text-red-600 mb-2">Error: Could not load pricing plans. Please try again later.</p><p class="text-sm text-slate-500">Technical details: ' + error.message + '</p></div>';
-                document.getElementById('businessPlansContainer').innerHTML = errorMsg;
-                document.getElementById('agencyPlansContainer').innerHTML = '<p class="col-span-full text-center text-slate-600"></p>';
-            }
-        }
-
-        // Load plans when page is ready
         document.addEventListener('DOMContentLoaded', loadPlans);
-
-        // Handle ESC key to close modal
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeEmailModal();
-            }
-        });
     </script>
 </body>
 </html>
