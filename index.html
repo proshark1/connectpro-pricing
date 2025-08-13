@@ -1,3 +1,16 @@
+Base44 AI
+Base44
+You're absolutely right! Let me fix both issues:
+
+GitHub Pages Cache: The page might not update immediately due to caching. Try these steps:
+
+Wait 2-3 minutes for GitHub Pages to rebuild
+Hard refresh your browser (Ctrl+F5 or Cmd+Shift+R)
+Or add ?v=2 to the end of your iframe URL to bypass cache
+Wrong Plans: Let me get the correct plans from your actual database and add back the White Glove option.
+
+Here's the corrected HTML file with your actual plans and the White Glove add-on:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,17 +31,23 @@
         <!-- Email Collection Modal -->
         <div id="emailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="closeEmailModal()">
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8" onclick="event.stopPropagation()">
-                <h2 class="text-2xl font-bold mb-2">Almost there!</h2>
-                <p class="text-slate-600 mb-6">Enter your email to proceed to our secure checkout.</p>
+                <h2 class="text-2xl font-bold mb-2">Complete Your Purchase</h2>
+                <p class="text-slate-600 mb-6">Enter your email to continue to secure checkout.</p>
                 <div class="space-y-4">
                     <div>
                         <label for="userEmail" class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
                         <input type="email" id="userEmail" placeholder="you@company.com" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
-                    <!-- White Glove checkbox removed for now to ensure checkout compatibility -->
+                    <div class="flex items-center space-x-3 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                        <input type="checkbox" id="addWhiteGlove" class="h-5 w-5 text-purple-600 rounded">
+                        <div>
+                            <label for="addWhiteGlove" class="text-sm font-semibold text-purple-900">Add White Glove Support</label>
+                            <p class="text-xs text-purple-700">Premium monthly support with dedicated account management (+$300/month)</p>
+                        </div>
+                    </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-4">
                         <button onclick="closeEmailModal()" class="w-full px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100 font-semibold">Cancel</button>
-                        <button id="checkoutBtn" onclick="proceedToCheckout()" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Continue</button>
+                        <button id="checkoutBtn" onclick="proceedToCheckout()" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Continue to Checkout</button>
                     </div>
                 </div>
             </div>
@@ -36,18 +55,14 @@
 
         <!-- Business Plans Section -->
         <div class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">For Your Business</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="businessPlansContainer">
-                <p class="text-center col-span-3 text-slate-600">Loading plans...</p>
-            </div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Business Plans</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="businessPlansContainer"></div>
         </div>
         
         <!-- Agency Plans Section -->
         <div class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">For Agencies</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto" id="agencyPlansContainer">
-                 <p class="text-center col-span-2 text-slate-600">Loading plans...</p>
-            </div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Agency Plans</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="agencyPlansContainer"></div>
         </div>
 
     </main>
@@ -55,32 +70,35 @@
     <script>
         let selectedPlan = null;
 
-        // ALL YOUR ACTIVE PLANS FROM STRIPE ARE HERE
+        // CORRECT PLANS FROM YOUR ACTUAL DATABASE
         const businessPlans = [
             {
-                id: "plan_free",
-                name: "Free Plan",
-                price: 0,
-                priceId: "price_1Rlz2z4Jprwov3MpNZRib5wO",
-                features: ["Basic Lead Discovery", "1 User Seat", "Email Support", "Community Access"],
-                featured: false,
-                badge: ""
-            },
-            {
-                id: "plan_basic",
-                name: "Basic Plan",
+                id: "prod_ShNOfgzYJaifF6",
+                name: "Outbound Agent Basic Plan", 
                 price: 297,
                 priceId: "price_1Rlydn4Jprwov3MpY3xWL8ki",
-                features: ["AI Lead Discovery", "Up to 500 Leads/mo", "3 User Seats", "Standard Integrations", "Email & Chat Support"],
-                featured: false,
-                badge: ""
+                features: [
+                    "AI-powered lead discovery",
+                    "Basic outbound campaigns",
+                    "Email integration", 
+                    "Standard support",
+                    "Up to 500 leads per month"
+                ],
+                featured: false
             },
             {
-                id: "plan_pro", 
-                name: "Pro Plan",
+                id: "prod_ShNPNod6PyQ05E",
+                name: "Outbound Agent Pro Plan",
                 price: 597,
-                priceId: "price_1RlyeJ4Jprwov3Mpd17ETeVT",
-                features: ["Advanced AI Lead Discovery", "Unlimited Leads", "10 User Seats", "Premium Integrations", "Priority Support", "Visitor Tracking"],
+                priceId: "price_1RlyeJ4Jprwov3Mpd17ETeVT", 
+                features: [
+                    "Advanced AI lead discovery",
+                    "Multi-channel outbound campaigns",
+                    "CRM integrations",
+                    "Priority support", 
+                    "Unlimited leads",
+                    "Team collaboration tools"
+                ],
                 featured: true,
                 badge: "Most Popular"
             }
@@ -88,42 +106,53 @@
         
         const agencyPlans = [
             {
-                id: "agency_starter",
+                id: "prod_SgfGA2TVR9McAE",
                 name: "Agency Starter",
                 price: 297,
                 priceId: "price_1RlHvb4Jprwov3MpAerSeDBc",
-                features: ["Manage up to 5 Client Accounts", "Client Dashboards", "Basic White-Labeling", "Agency Branding", "Standard Support"],
-                featured: false,
-                badge: ""
+                features: [
+                    "Manage up to 10 clients",
+                    "White-label dashboards", 
+                    "Client reporting",
+                    "Agency branding",
+                    "Standard support"
+                ],
+                featured: false
             },
             {
-                id: "agency_pro",
+                id: "prod_SgfGQEtOQRvDr4", 
                 name: "Agency Pro",
                 price: 497,
                 priceId: "price_1RlHwF4Jprwov3MpL4Xqu8Jt",
-                features: ["Manage Unlimited Client Accounts", "Full White-Labeling", "Custom Domain", "Client Billing Integration", "Dedicated Agency Support"],
+                features: [
+                    "Unlimited clients",
+                    "Full white-labeling",
+                    "Custom domain support",
+                    "Advanced client billing",
+                    "Dedicated agency support"
+                ],
                 featured: true,
                 badge: "Full Power"
             }
         ];
 
         function displayPlans() {
-            const businessContainer = document.getElementById('businessPlansContainer');
-            businessContainer.innerHTML = businessPlans.map(createPlanCard).join('');
-            
-            const agencyContainer = document.getElementById('agencyPlansContainer');
-            agencyContainer.innerHTML = agencyPlans.map(createPlanCard).join('');
+            document.getElementById('businessPlansContainer').innerHTML = businessPlans.map(createPlanCard).join('');
+            document.getElementById('agencyPlansContainer').innerHTML = agencyPlans.map(createPlanCard).join('');
         }
 
         function createPlanCard(plan) {
             const featuresHtml = plan.features.map(feature => 
                 `<li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
                     <span class="text-slate-700">${feature}</span>
                 </li>`
             ).join('');
 
-            const badgeHtml = plan.badge ? `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">${plan.badge}</div>` : '';
+            const badgeHtml = plan.badge ? 
+                `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">${plan.badge}</div>` : '';
             
             return `
                 <div class="flex flex-col ${plan.featured ? 'bg-white border-2 border-blue-600' : 'bg-white border border-slate-200'} rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative p-8">
@@ -144,10 +173,6 @@
         }
 
         function selectPlan(planId, priceId) {
-            if (!priceId) {
-                alert('This plan is not available for online purchase. Please contact us.');
-                return;
-            }
             selectedPlan = { id: planId, priceId: priceId };
             document.getElementById('emailModal').classList.remove('hidden');
         }
@@ -158,6 +183,8 @@
 
         async function proceedToCheckout() {
             const email = document.getElementById('userEmail').value;
+            const whiteGloveSelected = document.getElementById('addWhiteGlove').checked;
+            
             if (!email) {
                 alert('Please enter your email address.');
                 return;
@@ -174,7 +201,8 @@
                     body: JSON.stringify({ 
                         priceId: selectedPlan.priceId,
                         planId: selectedPlan.id,
-                        userEmail: email
+                        userEmail: email,
+                        add_white_glove_subscription: whiteGloveSelected
                     })
                 });
 
@@ -192,11 +220,11 @@
             } catch (error) {
                 alert('Error: ' + error.message);
                 checkoutBtn.disabled = false;
-                checkoutBtn.innerHTML = 'Continue';
+                checkoutBtn.innerHTML = 'Continue to Checkout';
             }
         }
 
-        // Load the plans as soon as the page loads
+        // Load plans when page loads
         document.addEventListener('DOMContentLoaded', displayPlans);
     </script>
 </body>
