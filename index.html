@@ -9,17 +9,17 @@
 <body class="bg-slate-50 font-sans">
     <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
         <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Find the perfect plan</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Choose Your Plan</h1>
             <p class="text-slate-600 text-lg max-w-3xl mx-auto">
-                Unlock the full power of lead generation with a plan that fits your needs.
+                Powerful AI-driven lead generation tools built for growth.
             </p>
         </div>
 
         <!-- Email Collection Modal -->
         <div id="emailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="closeEmailModal()">
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8" onclick="event.stopPropagation()">
-                <h2 class="text-2xl font-bold mb-2">Create Your Account</h2>
-                <p class="text-slate-600 mb-6">Enter your email to get started. You'll create your password after payment.</p>
+                <h2 class="text-2xl font-bold mb-2">Complete Your Purchase</h2>
+                <p class="text-slate-600 mb-6">Enter your email to proceed to our secure checkout.</p>
                 <div class="space-y-4">
                     <div>
                         <label for="userEmail" class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
@@ -29,12 +29,12 @@
                         <input type="checkbox" id="addWhiteGlove" class="h-5 w-5 text-purple-600 rounded focus:ring-purple-500">
                         <div>
                             <label for="addWhiteGlove" class="text-sm font-semibold text-purple-900">Add White Glove Support</label>
-                            <p class="text-xs text-purple-700">Monthly premium support with dedicated account management (+$300/month)</p>
+                            <p class="text-xs text-purple-700">Premium monthly support with dedicated account management (+$300/month)</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-4">
                         <button onclick="closeEmailModal()" class="w-full px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100 font-semibold">Cancel</button>
-                        <button id="checkoutBtn" onclick="proceedToCheckout()" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Continue to Payment</button>
+                        <button id="checkoutBtn" onclick="proceedToCheckout()" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Continue to Checkout</button>
                     </div>
                 </div>
             </div>
@@ -43,13 +43,17 @@
         <!-- Business Plans Section -->
         <div class="mb-16">
             <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Business Plans</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="businessPlansContainer"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="businessPlansContainer">
+                <p class="col-span-full text-center text-slate-600">Loading plans...</p>
+            </div>
         </div>
         
         <!-- Agency Plans Section -->
         <div class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Agency & White-Label Plans</h2>
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="agencyPlansContainer"></div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Agency Plans</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="agencyPlansContainer">
+                <p class="col-span-full text-center text-slate-600">Loading plans...</p>
+            </div>
         </div>
 
     </main>
@@ -57,177 +61,115 @@
     <script>
         let selectedPlan = null;
 
-        // ALL 3 BUSINESS PLANS FROM YOUR DATABASE
-        const businessPlans = [
-            {
-                id: "prod_ShNoSTxMvFDNTm",
-                name: "Outbound Agent Free Plan",
-                price: 0,
-                priceId: "price_1Rlz2z4Jprwov3MpNZRib5wO",
-                features: [
-                    "Basic lead discovery",
-                    "Limited outreach",
-                    "Community support",
-                    "Standard features"
-                ],
-                featured: false
-            },
-            {
-                id: "prod_ShNOfgzYJaifF6", 
-                name: "Outbound Agent Basic Plan",
-                price: 297,
-                priceId: "price_1Rlydn4Jprwov3MpY3xWL8ki",
-                features: [
-                    "AI-powered lead discovery",
-                    "Advanced outbound campaigns", 
-                    "Email & SMS integration",
-                    "Priority support",
-                    "Team collaboration"
-                ],
-                featured: false
-            },
-            {
-                id: "prod_ShNPNod6PyQ05E",
-                name: "Outbound Agent Pro Plan", 
-                price: 597,
-                priceId: "price_1RlyeJ4Jprwov3Mpd17ETeVT",
-                features: [
-                    "Everything in Basic",
-                    "Unlimited campaigns",
-                    "Advanced AI matching",
-                    "CRM integrations", 
-                    "White-label options",
-                    "Dedicated success manager"
-                ],
-                featured: true,
-                badge: "Most Popular"
-            }
-        ];
-        
-        // BOTH AGENCY PLANS
-        const agencyPlans = [
-            {
-                id: "prod_SgfGA2TVR9McAE",
-                name: "Agency Starter",
-                price: 297,
-                priceId: "price_1RlHvb4Jprwov3MpAerSeDBc", 
-                features: [
-                    "Up to 10 client accounts",
-                    "White-label dashboards",
-                    "Client reporting tools",
-                    "Revenue sharing model",
-                    "Agency support"
-                ],
-                featured: false
-            },
-            {
-                id: "prod_SgfGQEtOQRvDr4",
-                name: "Agency Pro", 
-                price: 497,
-                priceId: "price_1RlHwF4Jprwov3MpL4Xqu8Jt",
-                features: [
-                    "Unlimited client accounts",
-                    "Full white-labeling",
-                    "Custom domain support", 
-                    "Advanced billing tools",
-                    "Dedicated agency manager"
-                ],
-                featured: true,
-                badge: "Full Power"
-            }
-        ];
-
-        function displayPlans() {
-            document.getElementById('businessPlansContainer').innerHTML = businessPlans.map(createPlanCard).join('');
-            document.getElementById('agencyPlansContainer').innerHTML = agencyPlans.map(createPlanCard).join('');
-        }
-
+        // This function dynamically builds a plan card from data
         function createPlanCard(plan) {
-            const featuresHtml = plan.features.map(feature => 
+            const featuresHtml = (plan.features || []).map(feature => 
                 `<li class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                    </svg>
+                    <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                     <span class="text-slate-700">${feature}</span>
                 </li>`
             ).join('');
-
-            const badgeHtml = plan.badge ? 
-                `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">${plan.badge}</div>` : '';
             
+            const priceDisplay = plan.custom_price_text || `$${plan.price}`;
+            const badgeHtml = plan.badge_text ? `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">${plan.badge_text}</div>` : '';
+            const featuredClass = plan.featured ? 'bg-white border-2 border-blue-600' : 'bg-white/70 border border-slate-200';
+            const buttonClass = plan.featured ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-800 hover:bg-slate-900 text-white';
+
             return `
-                <div class="flex flex-col ${plan.featured ? 'bg-white border-2 border-purple-500 ring-4 ring-purple-100' : 'bg-white border border-slate-200'} rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 relative p-6">
+                <div class="flex flex-col ${featuredClass} rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative p-8">
                     ${badgeHtml}
                     <div class="text-center mb-6">
                         <h3 class="text-2xl font-bold text-slate-900 mb-2">${plan.name}</h3>
-                        <div class="text-4xl font-bold text-slate-900 mb-1">
-                            ${plan.price === 0 ? 'Free' : `$${plan.price}`}
-                            ${plan.price > 0 ? '<span class="text-lg font-normal text-slate-600">/month</span>' : ''}
-                        </div>
+                        <div class="text-5xl font-extrabold text-slate-900 mb-1">${priceDisplay}</div>
+                        ${!plan.custom_price_text ? '<p class="text-slate-500">per month</p>' : ''}
                     </div>
-                    <ul class="space-y-3 mb-8 flex-grow">
+                    <ul class="space-y-4 mb-8 flex-grow">
                         ${featuresHtml}
                     </ul>
-                    <button onclick="selectPlan('${plan.id}', '${plan.priceId}')" class="w-full py-3 px-4 ${plan.featured ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} rounded-lg font-medium transition-colors">
-                        Get ${plan.name}
+                    <button onclick="selectPlan('${plan.id}', '${plan.name}', '${plan.stripe_monthly_price_id || ''}')" class="w-full py-3 px-4 ${buttonClass} rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg">
+                        Get Started
                     </button>
                 </div>
             `;
         }
+        
+        // Fetch plans from your app's database when the page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            const businessContainer = document.getElementById('businessPlansContainer');
+            const agencyContainer = document.getElementById('agencyPlansContainer');
+            
+            try {
+                const response = await fetch('https://base44.app/api/apps/68729a31b99f8564e3a3467c/functions/getPublicPlans');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
 
-        function selectPlan(planId, priceId) {
-            selectedPlan = { id: planId, priceId: priceId };
+                if (data.success) {
+                    businessContainer.innerHTML = data.accountPlans.length > 0 ? data.accountPlans.map(createPlanCard).join('') : '<p class="col-span-full text-center text-slate-600">No business plans are available at this time.</p>';
+                    agencyContainer.innerHTML = data.agencyPlans.length > 0 ? data.agencyPlans.map(createPlanCard).join('') : '<p class="col-span-full text-center text-slate-600">No agency plans are available at this time.</p>';
+                } else {
+                    throw new Error(data.error || 'Failed to load plans.');
+                }
+            } catch (error) {
+                console.error('Error fetching plans:', error);
+                businessContainer.innerHTML = `<p class="col-span-full text-center text-red-600">Error: Could not load pricing plans. Please try again later.</p>`;
+                agencyContainer.innerHTML = '';
+            }
+        });
+
+        // Functions to handle the checkout modal
+        function selectPlan(planId, planName, priceId) {
+            if (!priceId) {
+                alert('This plan must be configured by support. Please contact us.');
+                return;
+            }
+            selectedPlan = { planId, priceId };
             document.getElementById('emailModal').classList.remove('hidden');
         }
 
         function closeEmailModal() {
             document.getElementById('emailModal').classList.add('hidden');
+            selectedPlan = null;
         }
 
         async function proceedToCheckout() {
             const email = document.getElementById('userEmail').value;
-            const whiteGloveSelected = document.getElementById('addWhiteGlove').checked;
+            const addWhiteGlove = document.getElementById('addWhiteGlove').checked;
+            const btn = document.getElementById('checkoutBtn');
             
-            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
                 alert('Please enter a valid email address.');
                 return;
             }
-
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            checkoutBtn.disabled = true;
-            checkoutBtn.innerHTML = 'Processing...';
+            
+            btn.disabled = true;
+            btn.innerHTML = 'Processing...';
 
             try {
                 const response = await fetch('https://base44.app/api/apps/68729a31b99f8564e3a3467c/functions/createCheckoutSession', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         priceId: selectedPlan.priceId,
-                        planId: selectedPlan.id,
+                        planId: selectedPlan.planId,
                         userEmail: email,
-                        add_white_glove_subscription: whiteGloveSelected
+                        add_white_glove_subscription: addWhiteGlove
                     })
                 });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Failed to create checkout session.');
-                }
-
-                const { url } = await response.json();
-                if (url) {
-                    window.top.location.href = url;
+                
+                const data = await response.json();
+                
+                if (response.ok && data.url) {
+                    window.top.location.href = data.url;
                 } else {
-                    throw new Error('Checkout URL not received.');
+                    throw new Error(data.error || 'Could not create checkout session.');
                 }
             } catch (error) {
-                alert('Error: ' + error.message);
-                checkoutBtn.disabled = false;
-                checkoutBtn.innerHTML = 'Continue to Payment';
+                console.error('Checkout error:', error);
+                alert('Checkout failed: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Continue to Checkout';
             }
         }
-
-        document.addEventListener('DOMContentLoaded', displayPlans);
     </script>
 </body>
 </html>
