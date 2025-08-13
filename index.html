@@ -1,16 +1,3 @@
-Base44 AI
-Base44
-You're absolutely right! Let me fix both issues:
-
-GitHub Pages Cache: The page might not update immediately due to caching. Try these steps:
-
-Wait 2-3 minutes for GitHub Pages to rebuild
-Hard refresh your browser (Ctrl+F5 or Cmd+Shift+R)
-Or add ?v=2 to the end of your iframe URL to bypass cache
-Wrong Plans: Let me get the correct plans from your actual database and add back the White Glove option.
-
-Here's the corrected HTML file with your actual plans and the White Glove add-on:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,14 +19,14 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
         <div id="emailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="closeEmailModal()">
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8" onclick="event.stopPropagation()">
                 <h2 class="text-2xl font-bold mb-2">Complete Your Purchase</h2>
-                <p class="text-slate-600 mb-6">Enter your email to continue to secure checkout.</p>
+                <p class="text-slate-600 mb-6">Enter your email to proceed to our secure checkout.</p>
                 <div class="space-y-4">
                     <div>
                         <label for="userEmail" class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
                         <input type="email" id="userEmail" placeholder="you@company.com" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     <div class="flex items-center space-x-3 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                        <input type="checkbox" id="addWhiteGlove" class="h-5 w-5 text-purple-600 rounded">
+                        <input type="checkbox" id="addWhiteGlove" class="h-5 w-5 text-purple-600 rounded focus:ring-purple-500">
                         <div>
                             <label for="addWhiteGlove" class="text-sm font-semibold text-purple-900">Add White Glove Support</label>
                             <p class="text-xs text-purple-700">Premium monthly support with dedicated account management (+$300/month)</p>
@@ -56,7 +43,7 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
         <!-- Business Plans Section -->
         <div class="mb-16">
             <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Business Plans</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="businessPlansContainer"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto" id="businessPlansContainer"></div>
         </div>
         
         <!-- Agency Plans Section -->
@@ -70,7 +57,6 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
     <script>
         let selectedPlan = null;
 
-        // CORRECT PLANS FROM YOUR ACTUAL DATABASE
         const businessPlans = [
             {
                 id: "prod_ShNOfgzYJaifF6",
@@ -143,8 +129,8 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
 
         function createPlanCard(plan) {
             const featuresHtml = plan.features.map(feature => 
-                `<li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                `<li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                     </svg>
                     <span class="text-slate-700">${feature}</span>
@@ -185,8 +171,8 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
             const email = document.getElementById('userEmail').value;
             const whiteGloveSelected = document.getElementById('addWhiteGlove').checked;
             
-            if (!email) {
-                alert('Please enter your email address.');
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address.');
                 return;
             }
 
@@ -195,6 +181,7 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
             checkoutBtn.innerHTML = 'Processing...';
 
             try {
+                // IMPORTANT: This URL points to your live base44 function
                 const response = await fetch('https://base44.app/api/apps/68729a31b99f8564e3a3467c/functions/createCheckoutSession', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -213,6 +200,7 @@ Here's the corrected HTML file with your actual plans and the White Glove add-on
 
                 const { url } = await response.json();
                 if (url) {
+                    // This command tells the parent Duda page to navigate
                     window.top.location.href = url;
                 } else {
                     throw new Error('Checkout URL not received.');
