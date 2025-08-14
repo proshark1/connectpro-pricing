@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-g">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ConnectPro Pricing</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -9,6 +9,45 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .gradient-bg { background-image: linear-gradient(to bottom right, #f0f4f8, #d9e2ec, #f0f4f8); }
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
     </style>
 </head>
 <body class="gradient-bg">
@@ -32,7 +71,7 @@
                         <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Visitor tracking</span></li>
                         <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Basic AI content creation</span></li>
                     </ul>
-                    <a href__="https://app.connectpro.ai/PublicCheckout?price_id=price_1RtLJzLFgwQ8TSGSQ0K7MP6o" target="_parent" class="block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">Get Started</a>
+                    <button onclick="selectPlan('price_1RtLJzLFgwQ8TSGSQ0K7MP6o', 'CP Starter Plan')" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">Get Started</button>
                 </div>
                 <!-- Growth Plan -->
                 <div class="border-2 border-purple-500 bg-white/70 rounded-2xl shadow-xl p-8 flex flex-col relative">
@@ -41,10 +80,10 @@
                     <div class="text-4xl font-bold text-slate-900 mb-4">$297<span class="text-lg font-normal text-slate-600">/month</span></div>
                     <ul class="space-y-3 mb-8 flex-grow">
                          <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Advanced lead tracking</span></li>
-                         <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>AI-generated blogs and posts</span></li>
+                         <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>AI-generated blogs & posts</span></li>
                          <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Multi-channel communications</span></li>
                     </ul>
-                    <a href__="https://app.connectpro.ai/PublicCheckout?price_id=price_1RtLLSLFgwQ8TSGScTLGilRn" target="_parent" class="block w-full text-center bg-purple-600 text-white font-semibold py-3 rounded-lg hover:bg-purple-700 transition-colors">Get Started</a>
+                    <button onclick="selectPlan('price_1RtLLSLFgwQ8TSGScTLGilRn', 'CP Growth Plan')" class="w-full bg-purple-600 text-white font-semibold py-3 rounded-lg hover:bg-purple-700 transition-colors">Get Started</button>
                 </div>
                 <!-- Next Level Plan -->
                 <div class="border border-slate-200 bg-white/70 rounded-2xl shadow-lg p-8 flex flex-col">
@@ -55,26 +94,33 @@
                         <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Advanced lead intelligence</span></li>
                         <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Priority support</span></li>
                     </ul>
-                    <a href__="https://app.connectpro.ai/PublicCheckout?price_id=price_1RtLMeLFgwQ8TSGSSHQJBPD6" target="_parent" class="block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">Get Started</a>
+                    <button onclick="selectPlan('price_1RtLMeLFgwQ8TSGSSHQJBPD6', 'CP Next Level')" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">Get Started</button>
                 </div>
             </div>
         </div>
 
-        <!-- White Glove Add-on -->
-        <div class="max-w-4xl mx-auto my-16">
-            <div class="border-2 border-purple-500 bg-white/80 rounded-2xl shadow-xl p-8 flex flex-col md:flex-row items-center gap-8">
-                <div class="flex-shrink-0">
-                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+        <!-- White Glove Add-On Section -->
+        <div class="max-w-3xl mx-auto my-16">
+            <div class="bg-white/70 border-2 border-purple-500 rounded-2xl shadow-xl p-6">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 14M5 21l14-14" /></svg>
                     </div>
-                </div>
-                <div class="flex-grow text-center md:text-left">
-                    <h3 class="text-2xl font-bold text-slate-900">Add White Glove Support</h3>
-                    <p class="text-slate-600 mt-2">Get a dedicated account manager and expert consulting. Select a plan above and add this during checkout. Cancel anytime.</p>
-                </div>
-                <div class="text-center md:text-right flex-shrink-0">
-                    <div class="text-4xl font-bold text-slate-900">$300</div>
-                    <div class="text-slate-500">/month</div>
+                    <div class="flex-grow text-center md:text-left">
+                        <h3 class="text-xl font-bold text-slate-900">Add White Glove Support</h3>
+                        <p class="text-slate-600">We get the most out of the platform and we do it all for you. You can start with us and cancel anytime you like.</p>
+                        <p class="text-sm text-slate-500 mt-1">Add to Order</p>
+                    </div>
+                    <div class="flex items-center space-x-4 flex-shrink-0">
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-slate-900">$300</div>
+                            <div class="text-sm text-slate-500">/month</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="whiteGloveToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,32 +129,46 @@
         <div>
             <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Agency & White-Label Plans</h2>
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                 <!-- Agency Starter -->
+                <!-- Agency Starter -->
                 <div class="border border-slate-200 bg-white/70 rounded-2xl shadow-lg p-8 flex flex-col">
                     <h3 class="text-2xl font-bold text-slate-900 mb-2">CP Agency Starter</h3>
+                    <p class="text-slate-600 mb-4">Core platform features and client management tools.</p>
                     <div class="text-4xl font-bold text-slate-900 mb-4">$297<span class="text-lg font-normal text-slate-600">/month</span></div>
-                    <p class="text-sm text-slate-600 mb-4">plus a one-time $500 setup fee</p>
-                    <ul class="space-y-3 mb-8 flex-grow">
-                        <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Core platform features</span></li>
-                        <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Client management tools</span></li>
-                        <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Limited AI content creation</span></li>
-                    </ul>
-                    <a href__="https://app.connectpro.ai/PublicCheckout?price_id=price_1RtLIMLFgwQ8TSGSl3JpEvA0" target="_parent" class="block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">Get Started</a>
+                    <div class="text-lg font-semibold text-slate-800 mb-4">+ $500 one-time setup fee</div>
+                    <button onclick="selectPlan('price_1RtLIMLFgwQ8TSGSl3JpEvA0', 'CP Agency Starter')" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-colors">Get Started</button>
                 </div>
-                 <!-- Agency Pro -->
+                <!-- Agency Pro -->
                 <div class="border border-slate-200 bg-white/70 rounded-2xl shadow-lg p-8 flex flex-col">
                     <h3 class="text-2xl font-bold text-slate-900 mb-2">CP Agency Pro</h3>
+                    <p class="text-slate-600 mb-4">A complete white-labeled solution with unlimited client subaccounts.</p>
                     <div class="text-4xl font-bold text-slate-900 mb-4">$497<span class="text-lg font-normal text-slate-600">/month</span></div>
-                    <p class="text-sm text-slate-600 mb-4">plus a one-time $1,250 setup fee</p>
-                    <ul class="space-y-3 mb-8 flex-grow">
-                        <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Full white-labeled solution</span></li>
-                        <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Unlimited client subaccounts</span></li>
-                        <li class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Branded dashboards & reports</span></li>
-                    </ul>
-                    <a href__="https://app.connectpro.ai/PublicCheckout?price_id=price_1RtLDzLFgwQ8TSGS5M5qNJYX" target="_parent" class="block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">Get Started</a>
+                    <div class="text-lg font-semibold text-slate-800 mb-4">+ $1250 one-time setup fee</div>
+                    <button onclick="selectPlan('price_1RtLDzLFgwQ8TSGS5M5qNJYX', 'CP Agency Pro')" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-colors">Get Started</button>
                 </div>
             </div>
         </div>
+
     </div>
+
+    <script>
+        let selectedPlan = null;
+
+        function selectPlan(priceId, planName) {
+            selectedPlan = { priceId, planName };
+            
+            // Check if White Glove is selected
+            const whiteGloveToggle = document.getElementById('whiteGloveToggle');
+            const addWhiteGlove = whiteGloveToggle.checked;
+            
+            // Build the checkout URL
+            let checkoutUrl = `https://app.connectpro.ai/PublicCheckout?price_id=${priceId}`;
+            if (addWhiteGlove) {
+                checkoutUrl += '&add_white_glove=true';
+            }
+            
+            // Navigate to checkout
+            window.top.location.href = checkoutUrl;
+        }
+    </script>
 </body>
 </html>
